@@ -1,4 +1,4 @@
-//g++ test.cpp -o m -lGL -lGLU -lglut
+//g++ practica1.cpp -o m -lGL -lGLU -lglut
 #include <GL/glut.h>
 #include <iostream>
 using namespace std;
