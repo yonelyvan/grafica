@@ -5,7 +5,7 @@ using namespace std;
 void init(){
   glClearColor(0.3,0.3,0.3,0.0); //establece el color de fondo de la ventana
   glMatrixMode(GL_PROJECTION); //establece el modo de matriz actual.
-  gluOrtho2D(0.0,200.0,0.0,150.0);//establece una región de visualización
+  gluOrtho2D(0.0,200.0,0.0,200.0);//establece una región de visualización
 }
 
 void lineSegment(void){
@@ -73,7 +73,7 @@ public:
 };
 //6
 void home(void){
-	class_home h(150,50,2,10); //clase home
+	class_home h(100,50,2,10); //clase home
 	int x=h.pos_x, y=h.pos_y;//posicion
   	int n=h.dim;
   	int t=h.t;
