@@ -40,13 +40,16 @@ void circlePlotPoints ( scrPt circCtr, scrPt circPt){
 void circleMidpoint (scrPt circCtr, GLint radius){
     scrPt circPt;
     GLint p = 1 - radius;  
+    circPt.x=0;
+    circPt.y=radius;
     circlePlotPoints(circCtr,circPt);
+    //cout<<"dlñuasld"<<endl;
     while (circPt.x < circPt.y) {
         circPt.x++;
         if (p < 0)
             p += 2 * circPt.x + 1;
         else {
-            circPt.y++;
+            circPt.y--;
             p += 2 * (circPt.x - circPt.y) + 1;
         }
         circlePlotPoints(circCtr, circPt);
