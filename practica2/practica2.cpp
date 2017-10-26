@@ -1,5 +1,5 @@
+//g++ practica2.cpp -o m -lGL -lGLU -lglut
 #include <GL/glut.h>
-
 GLsizei winWidth = 600, winHeight = 500;    // Initial display window size.
 GLint xRaster = 25, yRaster = 150;          // Initialize raster position. 
 
@@ -49,14 +49,14 @@ void lineGraph (void){
 
 void barChart (void){
    	GLint month, k;
-   	//glClear (GL_COLOR_BUFFER_BIT); //  Clear display window.
-   	glColor3f (1.0, 0.0, 0.0);     //  Set bar color to red.
+   	glClear (GL_COLOR_BUFFER_BIT); 
+   	glColor3f (0.0, 0.0, 0.0);     
    	for (k = 0; k < 12; k++){
 	  	glRecti (20 + k*50, 165, 40 + k*50, dataValue [k]);
    	}
 
-   	glColor3f (0.0, 0.0, 0.0);           //  Set text color to black.
-  	xRaster = 20;                   //  Display chart labels.
+   	glColor3f (0.0, 0.0, 0.0);           
+  	xRaster = 20;                   
   	for (month = 0; month < 12; month++) {
 	  glRasterPos2i (xRaster, yRaster);
 	  for (k = 3*month; k < 3*month + 3; k++)
@@ -64,50 +64,52 @@ void barChart (void){
 	  xRaster += 50;
    	}
    	glFlush ( );
-
-
-
 }
 
 void fun4(void){
 	GLint month, k;
-	GLint x = 30;                        // Initialize x position for chart.
+	GLint x = 30;                        
 	int month_init=6;
 	int month_end=12;
 
-	glClear (GL_COLOR_BUFFER_BIT);       //  Clear display window.
-	glColor3f (0.0, 0.0, 1.0);           //  Set line color to blue.
-	glBegin (GL_LINE_STRIP);             //  Plot data as a polyline.
-		for (k = month_init; k < 12; k++)
+	glClear (GL_COLOR_BUFFER_BIT);       
+	glColor3f (0.0, 0.0, 1.0);           
+	glBegin (GL_LINE_STRIP);             
+		for (k = month_init; k < month_end; k++)
 			glVertex2i (x + k*50, dataValue [k]);
-	glEnd ( );
+	glEnd ();
 
-
-	glColor3f (1.0, 0.0, 0.0);          //  Set marker color to red.
-	xRaster = 25;                       //  Display chart labels.
-	for (k = month_init; k < 12; k++) {          //  Plot data as asterisk polymarkers. 
+	glColor3f (1.0, 0.0, 0.0);          
+	xRaster = 25;                       
+	for (k = month_init; k < month_end; k++) { //macadores      
 		glRasterPos2i (xRaster + k*50, dataValue [k] - 4);
 		glutBitmapCharacter (GLUT_BITMAP_9_BY_15, '*');
 	}
 
-
-	glColor3f (0.0, 0.0, 0.0);          //  Set text color to black.
-	xRaster = 20 + month_init*50;                       //  Display chart labels.
-	for (month = month_init; month < 12; month++) {
+	glColor3f (0.0, 0.0, 0.0);          
+	xRaster = 20 + month_init*50;                       
+	for (month = month_init; month < month_end; month++) {
 		glRasterPos2i (xRaster, yRaster);
-		for (k = 3*month; k < 3*month + 3; k++) 
+		for (k = 3*month; k < 3*month + 3; k++) //labels
 		  glutBitmapCharacter (GLUT_BITMAP_HELVETICA_12, label[k]);
 		xRaster += 50;
 	}
 	glFlush ( );
-	// siguiente funcion
-	//GLint month, k;
-   	//glClear (GL_COLOR_BUFFER_BIT); //  Clear display window.
-   	glColor3f (1.0, 0.0, 0.0);     //  Set bar color to red.
-   	for (k = month_init; k < 12; k++){
+	
+   	glColor3f (0.0, 0.0, 0.0);     
+   	for (k = month_init; k < month_end; k++){//baras
 	  	glRecti (20 + k*50, 165, 40 + k*50, dataValue [k]);
    	}
    	glFlush ( );
+   	
+   	//linea de tendencia
+	glColor3f(1,0,0);
+	glLineWidth(2);
+	glBegin(GL_LINES);
+	glVertex2i(25+month_init*50, dataValue[month_init-1]);
+	glVertex2i(25+(month_end-1)*50, dataValue[month_end-1]);
+	glEnd();
+	glFlush();
 
 }
 

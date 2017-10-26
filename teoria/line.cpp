@@ -57,7 +57,7 @@ void set_pixel(int xi, int yi){
 }
 
 /*dibujando lineas*/
-void line_x(point p1, point p2){//simple espejando x 
+void line_x(point p1, point p2){//simple espejando en funcion de x 
   glClear(GL_COLOR_BUFFER_BIT);
   plano();//dibujar plano
   int x,y;
@@ -72,7 +72,7 @@ void line_x(point p1, point p2){//simple espejando x
   glFlush();
 }
 
-void line_y(point p1, point p2){//simple espejando y 
+void line_y(point p1, point p2){//simple espejando en funcion de y 
   glClear(GL_COLOR_BUFFER_BIT);
   plano();//dibujar plano
   int x,y;
@@ -86,7 +86,7 @@ void line_y(point p1, point p2){//simple espejando y
   glFlush();
 }
 
-void line_y2(point p1, point p2){//simple espejando y 
+void line_y2(point p1, point p2){//simple espejando en funcion de  y 
   glClear(GL_COLOR_BUFFER_BIT);
   plano();//dibujar plano
   int x,y;
@@ -117,7 +117,7 @@ void line_xoy(point p1, point p2){
 
 
 
-void punto_medio(point p1,point p2){
+void punto_medio_x(point p1,point p2){
   glClear(GL_COLOR_BUFFER_BIT);
   plano();//dibujar plano
   float dx, dy, E, NE, d, x, y;
@@ -133,17 +133,44 @@ void punto_medio(point p1,point p2){
   while(x<p2.x){
     if(d<=0.0){//E
       d = d + E; 
-      x = x + 0.00001;
+      x = x + 0.001;
   }else{//NE
     d = d + NE;
-    x = x + 0.00001;
-    y = y + 0.00001;
+    x = x + 0.001;
+    y = y + 0.001;
   }
   set_pixel(x,y);
   see_point(x,y);
   }
-  glEnd();
-  glFlush();
+}
+
+void punto_medio_y(point p1,point p2){
+  glClear(GL_COLOR_BUFFER_BIT);
+  plano();//dibujar plano
+  float dx, dy, E, NE, d, x, y;
+  dx = p2.x - p1.x;
+  dy = p2.y - p1.y;
+  d = 2.0 * dy-dx; //valor inicia para d
+  E = 2.0 * dy; //incremento de E
+  NE = 2.0 * (dy-dx); //incremento de NE
+  x=p1.x;
+  y=p1.y;
+  set_pixel(x,y);
+  see_point(x,y);
+  //while(x<p2.x){
+  while(y<p2.y){
+    if(d<=0.0){//E
+      d = d + E; 
+      x = x + 0.001;
+      y = y + 0.001;
+  }else{//NE
+    d = d + NE;
+    x = x + 0.001;
+    y = y + 0.001;
+  }
+  set_pixel(x,y);
+  see_point(x,y);
+  }
 }
 
 
@@ -155,7 +182,7 @@ void plot_main(){
   //line_y(p1,p2);
   //line_y2(p1,p2);
   //line_xoy(p1,p2);
-  punto_medio(p1,p2);
+  punto_medio_y(p1,p2);
 }
 
 
