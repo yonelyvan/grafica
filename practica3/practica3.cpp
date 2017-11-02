@@ -1,4 +1,4 @@
-//g++ practica3.cpp -o m -lGL -lGLU -lglut 
+//g++ file.cpp -o m -lGL -lGLU -lglut 
 #include <GL/glut.h>
 #include <stdlib.h>
 #include <math.h>
@@ -23,6 +23,25 @@ void lineSegment (screenPt pt1, screenPt pt2){//dibuja una linea
 	glVertex2i (pt1.x, pt1.y);
 	glVertex2i (pt2.x, pt2.y);
 	glEnd ( );
+}
+
+void lineSegment(void){
+  glClear(GL_COLOR_BUFFER_BIT); //borrar búferes a valores predeterminados
+  glColor3f(0,0,1); // cambia el color de la linea (RGB)
+  glLineWidth(6);
+  glBegin(GL_LINES);
+  glVertex2i(180,15);
+  glVertex2i(10,145);
+  glEnd();
+  glFlush();
+  //new line
+  glColor3f(0,1,0);
+  glLineWidth(2);
+  glBegin(GL_LINES);
+  glVertex2i(190,15);
+  glVertex2i(20,145);
+  glEnd();
+  glFlush();
 }
 
 void drawCurve (GLint curveNum){
