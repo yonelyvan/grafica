@@ -10,8 +10,7 @@ struct screenPt{
 	GLint y;
 };
 typedef enum { limacon = 1, cardioid, threeLeaf, fourLeaf, spiral } curveName;
-GLsizei winWidth = 600, winHeight = 500; // Tamaño inicial de la ventana de
-// visualización.
+GLsizei winWidth = 600, winHeight = 500; // Tamaño inicial de la ventana
 
 void init (void){
 	glClearColor (1.0, 1.0, 1.0, 1.0);
@@ -19,7 +18,7 @@ void init (void){
 	gluOrtho2D (0.0, 200.0, 0.0, 150.0);
 }
 
-void lineSegment (screenPt pt1, screenPt pt2){
+void lineSegment (screenPt pt1, screenPt pt2){//dibuja una linea
 	glBegin (GL_LINES);
 	glVertex2i (pt1.x, pt1.y);
 	glVertex2i (pt2.x, pt2.y);
@@ -31,12 +30,12 @@ void drawCurve (GLint curveNum){
 	const GLint a = 175, b = 60;
 	
 	GLfloat r, theta, dtheta = 1.0 / float (a);	
-	GLint x0 = 200, y0 = 250; // Establecer posición inicial en la pantalla.
+	GLint x0 = 200, y0 = 250; // establecer posición inicial en la pantalla
 	screenPt curvePt[2];
-	glColor3f (0.0, 0.0, 0.0); // Seleccionar negro como color de curva.
-	curvePt[0].x = x0; // Inicializar posición de la curva.
+	glColor3f (0.0, 0.0, 0.0); // seleccionar negro como color de curva
+	curvePt[0].x = x0; // inicializar posición de la curva
 	curvePt[0].y = y0;
-	switch (curveNum) {
+	switch (curveNum) { 
 		case limacon:curvePt[0].x += a+b;break;
 		case cardioid:curvePt[0].x += a+a;break;
 		case threeLeaf:curvePt[0].x += a;break;
@@ -84,8 +83,8 @@ void displayFcn (void){
 }
 
 void winReshapeFcn (GLint newWidth, GLint newHeight){
-	glMatrixMode (GL_PROJECTION);
-	glLoadIdentity ( );
+	glMatrixMode (GL_PROJECTION); //especifica que matriz es la matriz actual
+	glLoadIdentity();//reemplaza la matriz actual con la matriz de identidad
 	gluOrtho2D (0.0, (GLdouble) newWidth, 0.0, (GLdouble) newHeight);
 	glClear (GL_COLOR_BUFFER_BIT);
 }
@@ -96,8 +95,8 @@ int main (int argc, char** argv){
 	glutInitWindowPosition (100, 100);
 	glutInitWindowSize (winWidth, winHeight);
 	glutCreateWindow ("Dibujo de curvas");
-	init ( );
-	glutDisplayFunc (displayFcn);
-	glutReshapeFunc (winReshapeFcn);
+	init ();
+	glutDisplayFunc(displayFcn);
+	glutReshapeFunc(winReshapeFcn);//actualisa si hay cambios que mostrar 
 	glutMainLoop ( );
 }
