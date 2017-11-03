@@ -56,50 +56,56 @@ void set_pixel(int xi, int yi){
   glFlush();
 }
 
+
 /*dibujando lineas*/
-void line_x(point p1, point p2){//simple espejando en funcion de x 
-  glClear(GL_COLOR_BUFFER_BIT);
-  plano();//dibujar plano
-  int x,y;
-  float m=( p2.y-p1.y )*1.0/( p2.x-p1.x );//pendiente 
-  see(m);
-  for (x = p1.x; x <= p2.x; ++x){
-    y = p1.y+m*(x-p1.x);
-    set_pixel(x,y);
-    see_point(x,y);
-  }
-  glEnd();
-  glFlush();
+void ln(point p1, point p2){//simple espejando en funcion de x 
+	if(p1.x>p2.x){
+		point temp=p1;
+		p1=p2;
+		p2=temp;
+	}
+  	float dy = p2.y-p1.y;
+  	float dx = p2.x-p1.x;
+	float m=dy/dx;//pendiente 
+  	float angulo=atan(dy/dx)*180/PI;
+	int x,y;
+  	if(angulo<45){//alguno < 45 en funcion de x
+    	for (x = p1.x; x <= p2.x; ++x){
+    		y = p1.y+m*(x-p1.x);
+    		set_pixel(x,y);
+    	}
+  	}else{//alguno > 45 en funcion de y
+    	for (y = p1.y; y <= p2.y; ++y){
+		    x = (y-p1.y)/m + p1.x;
+		    set_pixel(x,y);
+  		}
+  	}
 }
 
-void line_y(point p1, point p2){//simple espejando en funcion de y 
-  glClear(GL_COLOR_BUFFER_BIT);
-  plano();//dibujar plano
-  int x,y;
-  float m=(p2.y-p1.y)*1.0/(p2.x-p1.x); 
-  for (y = p1.y; y <= p2.y; ++y){
-    x = (y-p1.y)/m + p1.x;
-    set_pixel(x,y);
-    see_point(x,y);
-  }
-  glEnd();
-  glFlush();
+void dda(point p1, point p2){ 
+	double dx=(p2.x-p1.x);
+	double dy=(p2.y-p1.y);
+	double steps;
+	float xInc,yInc,x=p1.x,y=p1.y;
+	if(abs(dx)>abs(dy)){
+		steps=(abs(dx));
+	}
+	else{
+		steps=(abs(dy));
+	}
+	xInc=dx/(float)steps;
+	yInc=dy/(float)steps;
+
+	set_pixel(x,y);
+	int k;
+	for(k=0;k<steps;k++){
+		x+=xInc;
+		y+=yInc;
+		set_pixel(round(x), round(y));
+	}
 }
 
 
-void line_xoy(point p1, point p2){ 
-  float dy = p2.y-p1.y;
-  float dx = p2.x-p1.x;
-  float angulo=atan(dy/dx)*180/PI;
-  see(angulo);
-  if(angulo<45){//alguno < 45 en funcion de x
-  cout<<"en funcion de X"<<endl;
-    line_x(p1,p2);
-  }else{//alguno > 45 en funcion de y
-    cout<<"en funcion de Y"<<endl;
-    line_y(p1,p2);
-  }
-}
 
 
 
@@ -107,12 +113,11 @@ void line_xoy(point p1, point p2){
 
 //(2,3) -> (7,14)
 void plot_main(){
-  point p1(2,3);
-  point p2(42,84);//42,84
-  //line_x(p1,p2);
-  //line_y(p1,p2);
-  //line_y2(p1,p2);
-  //line_xoy(p1,p2);
+	glClear(GL_COLOR_BUFFER_BIT);
+	plano();//dibujar plano
+
+	ln(point(60,90),point(70,10));
+	dda(point(65,90),point(75,10));
 }
 
 

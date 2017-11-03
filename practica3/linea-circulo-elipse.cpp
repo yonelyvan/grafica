@@ -72,6 +72,7 @@ void set_pixel(point p){
 
 
 
+
 void dda(point p1, point p2){ 
 	double dx=(p2.x-p1.x);
 	double dy=(p2.y-p1.y);
