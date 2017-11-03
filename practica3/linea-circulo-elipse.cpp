@@ -187,6 +187,7 @@ void plot_circle_point(point pc, point pk){
 	set_pixel( pc.x - pk.y,  pc.y - pk.x);
 }
 
+
 void plot_elipse_point(point pc, point pk){
 	set_pixel( pc.x + pk.x,  pc.y + pk.y);
 	set_pixel( pc.x - pk.x,  pc.y + pk.y);
