@@ -2,12 +2,9 @@
 #include <GL/glut.h>
 #include <stdio.h>
 
-<<<<<<< HEAD
+
 //dimensiones de ventana
-int windowWidtb; 
-=======
-int windowWidth;
->>>>>>> f37b0e96b29a9567b5cd0cc497164a56b0851206
+int windowWidth; 
 int windowHeight;
 
 int init (void){

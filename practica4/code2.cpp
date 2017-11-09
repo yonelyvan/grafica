@@ -9,9 +9,9 @@ al hacer click se obtiene el color se un pixel.
 #include <math.h>
 #include <GL/glut.h>
 
-<<<<<<< HEAD
+
 //dimensiones de ventana
-int windowWidtb; 
+int windowWidth; 
 int windowHeight;
 
 //variables control de punto
@@ -21,22 +21,6 @@ int yi, yf, yt;
 //configuracion inical del programa
 void init (void){
 	glClearColor (1.0f, 1.0f, 1.0f, 1.0f);
-=======
-// ******* Seccion de variables globales ****************
-// dimensiones de la pantalla
-int windowWidth;
-int windowHeight;
-
-// variables de control del puntero
-int xi, xf, xt;
-int yi, yf, yt;
-// ******************************************************
-
-// Configuracion inicial del programa
-int init (void){
-    // color usado al limpiar la ventana
-    glClearColor (1.0f, 1.0f, 1.0f, 0.0f);
->>>>>>> f37b0e96b29a9567b5cd0cc497164a56b0851206
 }
 
 // funcion principal de despliegue
@@ -177,16 +161,12 @@ void special_key(int key, int x, int y){
     printf("special key: # %d \n",key);
 }
 
-<<<<<<< HEAD
-	//activa el pintado de pixeles
 
-=======
 // llamada por GLUT automaticamente
 void timer_function(int value){
     // mensaje cada 8 segundos
     printf("timer func: Posicion del puntero %d %d\n", xt, yt);
     glutTimerFunc(8000, timer_function, 1);
->>>>>>> f37b0e96b29a9567b5cd0cc497164a56b0851206
 }
 
 int main (int argc, char** argv){

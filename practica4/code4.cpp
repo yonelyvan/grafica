@@ -1,9 +1,4 @@
 // g++ file.cpp -o m -lGL -lGLU -lglut
-/*****************************************************
-Programa que activa los eventos de interfaz del usuario
-manejo de raton, teclado y timer. Uso del color,
-al hacer click se obtiene el color se un pixel.
-******************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -20,19 +15,63 @@ typedef pair<int,int> point;
 // dimensiones de la pantalla
 int windowWidth;
 int windowHeight;
-
 // variables de control del puntero
 int xi, xf, xt;
 int yi, yf, yt;
 // ******************************************************
-
 // Configuracion inicial del programa
 int init (void){
     // color usado al limpiar la ventana
     glClearColor (1.0f, 1.0f, 1.0f, 0.0f);
 }
 
-///////////////////////////////////////////////////////////////////
+/********************** menu ***************/
+int iFondo = 0; //fondo por defecto
+int ifigura =3; //figura por defecto
+// coleccion de constantes para determinar los colores a usar
+typedef enum {FONDO1,FONDO2,FONDO3,LINEA,CIRCULO,CUADRADO,ELIPSE} opcionesmenu;
+
+void onMenu(int opcion){
+    switch(opcion){
+        case FONDO1: iFondo = 0; break;
+        case FONDO2: iFondo = 1; break;
+        case FONDO3: iFondo = 2; break;
+        case LINEA: ifigura = 3; break;
+        case CIRCULO: ifigura = 4; break;
+        case CUADRADO: ifigura = 5; break;
+        case ELIPSE: ifigura = 6; break;
+    }
+    glutPostRedisplay();
+}
+
+void creacionMenu(void){
+    int menuFondo, menuDibujo, menufigura, menuPrincipal;
+
+    // glutAddMenuEntry genera una opcion para seleccionar
+    menuFondo = glutCreateMenu(onMenu);
+    glutAddMenuEntry("Negro", FONDO1);
+    glutAddMenuEntry("Verde oscuro", FONDO2);
+    glutAddMenuEntry("Azul oscuro", FONDO3);
+
+    menufigura = glutCreateMenu(onMenu);
+    glutAddMenuEntry("linea", LINEA);
+    glutAddMenuEntry("circulo", CIRCULO);
+    glutAddMenuEntry("cuadrado", CUADRADO);
+    glutAddMenuEntry("elipse", ELIPSE);
+
+    // asocian los respectivos submenus
+    menuPrincipal = glutCreateMenu(onMenu);
+    glutAddSubMenu("Color de fondo", menuFondo);
+    glutAddSubMenu("figura", menufigura);
+
+    // se dispone al clic derecho para ejecutar el menu
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+/************************************************/
+
+
+/******************** DIBUJOS RECTA CIRCULO ELIPSE CUADRADO **********************/
 void set_pixel(int xi, int yi){
   	glBegin(GL_POINTS);
   	glColor3f(0,0,0);
@@ -169,20 +208,30 @@ void elipse(point pc, int rx, int ry){
 	}
 }
 
-void main_plot(int xi,int yi, int xf,int yf){
+void main_plot(int xi,int yi, int xf,int yf, int figura){
 	int dy=yf-yi;
 	int dx=xf-xi;
 	if(abs(dx)>0 && abs(dy)>0){
-	    //mis funciones
-	    //recta(point(xi,yi),point(xf,yf));
-	    //cuadrado(point(xi,yi),point(xf,yf));
-	    circulo(point(xi+dx/2,yi+dy/2),min(abs(dx),abs(dy))/2 );
-	    //elipse(point(xi+dx/2,yi+dy/2),abs(dx)/2,abs(dy)/2 );
+        switch(figura){
+            case LINEA: 
+                recta(point(xi,yi),point(xf,yf));
+                break;
+            case CIRCULO: 
+    	        circulo(point(xi+dx/2,yi+dy/2),min(abs(dx),abs(dy))/2 );
+                break;
+            case CUADRADO: 
+                cuadrado(point(xi,yi),point(xf,yf)); 
+                break;
+            
+            case ELIPSE: 
+                elipse(point(xi+dx/2,yi+dy/2),abs(dx)/2,abs(dy)/2 );
+                break;
+        }        
 	}
 }
+/************************************************/
 
 
-///////////////////////////////////////////////////////////////////
 
 
 // funcion principal de despliegue
@@ -202,11 +251,19 @@ void display(void){
     for (i=yi ; i>=yf ; i--)
         glVertex2i(xi,i), glVertex2i(xf,i);
     glEnd();
-    ///////////////////////////////////////////////////////
-    main_plot(xi,yi,xf,yf);
-    ///////////////////////////////////////////////////////
-
-
+    
+    /*************************  MENU *************************/
+    float colores[6][3] = {
+        {1.00f, 1.00f, 1.00f}, // 0 - blanco
+        {0.06f, 0.25f, 0.13f}, // 1 - verde osucro
+        {0.20f, 0.14f, 0.66f}, // 3 - azul claro
+    };
+    //actualizar color de fondo
+    glClearColor(colores[iFondo][0], colores[iFondo][1], colores[iFondo][2], 1.0f);
+    glFlush();
+    //actualizar figuira
+    main_plot(xi,yi,xf,yf, ifigura);
+    /*******************************************************/
     // activa el pintado de pixeles
     glBegin(GL_POINTS);
 
@@ -342,7 +399,8 @@ int main (int argc, char** argv){
     glutInit (&argc, argv);
 
     // Usa double-buffer y modo de color RGBA
-    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA);
+    //glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA);
+    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); 
 
     // especifica el tamaño inicial de la ventana de la aplicacion
     glutInitWindowSize (800, 600);
@@ -376,6 +434,8 @@ int main (int argc, char** argv){
 
     // funcion de inicializacion
     init ( );
+    //menu
+    creacionMenu(); 
 
     // esta funcion arranca a correr la libreria glut
     glutMainLoop ( );
