@@ -10,6 +10,11 @@ al hacer click se obtiene el color se un pixel.
 #include <GL/glut.h>
 #include <iostream>
 using namespace std;
+#define PI 3.14159265
+#define x first
+#define y second
+
+typedef pair<int,int> point;
 
 // ******* Seccion de variables globales ****************
 // dimensiones de la pantalla
@@ -26,6 +31,159 @@ int init (void){
     // color usado al limpiar la ventana
     glClearColor (1.0f, 1.0f, 1.0f, 0.0f);
 }
+
+///////////////////////////////////////////////////////////////////
+void set_pixel(int xi, int yi){
+  	glBegin(GL_POINTS);
+  	glColor3f(0,0,0);
+	glVertex2i(xi, yi);
+  	glEnd();
+  	glFlush();
+}
+
+//funcion cuadrado
+void dda(point p1, point p2){ 
+	double dx=(p2.x-p1.x);
+	double dy=(p2.y-p1.y);
+	double steps;
+	float xInc,yInc,x=p1.x,y=p1.y;
+	if(abs(dx)>abs(dy)){
+		steps=(abs(dx));
+	}
+	else{
+		steps=(abs(dy));
+	}
+	xInc=dx/(float)steps;
+	yInc=dy/(float)steps;
+
+	set_pixel(x,y);
+	int k;
+	for(k=0;k<steps;k++){
+		x+=xInc;
+		y+=yInc;
+		set_pixel(round(x), round(y));
+	}
+}
+
+void recta(point p1, point p2){ 
+	dda(p1,p2);
+}
+
+int min(int a, int b){
+	return a<b?a:b;
+}
+
+void cuadrado(point p1, point p2){ 
+  	int dy=p2.y-p1.y;
+	int dx=p2.x-p1.x;
+	//cuadrantes
+	int cx = dx>0?1:-1;
+	int cy = dy>0?1:-1;
+
+	int lmin=min(abs(dx), abs(dy));
+	cout<<"DX "<<dx<<" DY "<<dy<<" LMIN "<<lmin<<endl;  
+	recta(p1,point( p1.x+lmin*cx, p1.y ));
+	recta(p1,point(p1.x,p1.y+lmin*cy));
+	recta(point(p1.x+lmin*cx, p1.y),point(p1.x+lmin*cx, p1.y+lmin*cy));
+	recta(point(p1.x, p1.y+lmin*cy),point(p1.x+lmin*cx, p1.y+lmin*cy));	
+}
+
+void plot_circle_point(point pc, point pk){
+	set_pixel( pc.x + pk.x,  pc.y + pk.y);
+	set_pixel( pc.x - pk.x,  pc.y + pk.y);
+	set_pixel( pc.x + pk.x,  pc.y - pk.y);
+	set_pixel( pc.x - pk.x,  pc.y - pk.y);
+	set_pixel( pc.x + pk.y,  pc.y + pk.x);
+	set_pixel( pc.x - pk.y,  pc.y + pk.x);
+	set_pixel( pc.x + pk.y,  pc.y - pk.x);
+	set_pixel( pc.x - pk.y,  pc.y - pk.x);
+}
+
+void plot_elipse_point(point pc, point pk){
+	set_pixel( pc.x + pk.x,  pc.y + pk.y);
+	set_pixel( pc.x - pk.x,  pc.y + pk.y);
+	set_pixel( pc.x + pk.x,  pc.y - pk.y);
+	set_pixel( pc.x - pk.x,  pc.y - pk.y);
+}
+
+void circulo(point pc, int r){
+	int x, y, p;
+	x = 0;
+	y = r;
+	p = 1-r;
+	plot_circle_point(pc,point(x,y)); 
+	//para un octante
+	while (x < y){
+		++x;
+		if(p < 0)
+			p += 2*x + 1;
+		else{
+			--y;
+			p += 2*(x-y) + 1;
+		}
+		plot_circle_point(pc, point(x,y));
+	}
+}
+
+void elipse(point pc, int rx, int ry){
+	int x, y, p, px, py;
+	int rx2, ry2, tworx2, twory2;
+	ry2 = ry*ry;
+	rx2 = rx*rx;
+	twory2 = 2 * ry2;
+	tworx2 = 2 * rx2;
+	// región 1 
+	x = 0;
+	y = ry;
+	plot_elipse_point(pc, point(x,y));
+	p = round(ry2 - rx2*ry + 0.25*rx2);
+	px = 0;
+	py = tworx2*y;
+	while (px < py){ // se cicla hasta trazar la región 1
+		x = x + 1;
+		px = px + twory2;
+		if (p < 0)
+		  	p = p + ry2 + px;
+		else {
+			y = y - 1;
+			py = py - tworx2;
+			p = p + ry2 + px - py;
+		}
+		plot_elipse_point(pc, point(x,y));
+	}
+	//region 2
+	p = round(ry2*(x+0.5)*(x+0.5) + rx2*(y-1)*(y-1) - rx2*ry2);
+	px = 0;
+	py = tworx2*y;
+	while (y > 0){ // se cicla hasta trazar la región 2
+		y = y - 1;
+		py = py - tworx2;
+		if (p > 0)
+		  	p = p + rx2 - py;
+		else {
+		  	x = x + 1;
+		  	px = px + twory2;
+		  	p = p + rx2 + py + px;
+		}
+		plot_elipse_point(pc, point(x,y));
+	}
+}
+
+void main_plot(int xi,int yi, int xf,int yf){
+	int dy=yf-yi;
+	int dx=xf-xi;
+	if(abs(dx)>0 && abs(dy)>0){
+	    //mis funciones
+	    //recta(point(xi,yi),point(xf,yf));
+	    //cuadrado(point(xi,yi),point(xf,yf));
+	    circulo(point(xi+dx/2,yi+dy/2),min(abs(dx),abs(dy))/2 );
+	    //elipse(point(xi+dx/2,yi+dy/2),abs(dx)/2,abs(dy)/2 );
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////
+
 
 // funcion principal de despliegue
 void display(void){
@@ -44,6 +202,10 @@ void display(void){
     for (i=yi ; i>=yf ; i--)
         glVertex2i(xi,i), glVertex2i(xf,i);
     glEnd();
+    ///////////////////////////////////////////////////////
+    main_plot(xi,yi,xf,yf);
+    ///////////////////////////////////////////////////////
+
 
     // activa el pintado de pixeles
     glBegin(GL_POINTS);
@@ -110,6 +272,10 @@ void getPixel(int x, int y, Color rgb){
     glReadPixels(x, y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
 }
 
+
+
+
+
 // captura el evento de clic
 void mouse_click(int button, int state, int x, int y){
     Color c;
@@ -128,7 +294,6 @@ void mouse_click(int button, int state, int x, int y){
         // captura posicion inicial de arranque
         printf("mouse_click: Arrastre con el boton %d hasta %3d, %3d\n",button, xf, yf);
     }
-
     // manda a ppintar (metodo display)
     glutPostRedisplay();
 }
