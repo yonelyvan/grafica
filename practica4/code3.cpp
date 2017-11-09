@@ -1,10 +1,12 @@
-// Programa que genera un menu de opciones
-// en el cual se ejecuta con un clic derecho y genera la estructura:
-// Menu principal con: color de fondo y color de dibujo
-// Sub-menu color de fondo tenemos: negro, verde osucro y azul oscuro
-// Sub-menu color de dibujo tenemos: balcno, verde claro y azul claro
+// g++ file.cpp -o m -lGL -lGLU -lglut
+/******************************************************************** 
+Programa que genera un menu de opciones
+ en el cual se ejecuta con un clic derecho y genera la estructura:
+ Menu principal con: color de fondo y color de dibujo
+ Sub-menu color de fondo tenemos: negro, verde osucro y azul oscuro
+ Sub-menu color de dibujo tenemos: balcno, verde claro y azul claro
+********************************************************************/
 #include <GL/glut.h>
-// g++ lab4_3.cpp -o m -lGL -lGLU -lglut
 int iFondo = 0;
 int iDibujo = 3;
 
@@ -12,8 +14,7 @@ int iDibujo = 3;
 typedef enum {FONDO1,FONDO2,FONDO3,FONDO4,DIBUJO1,DIBUJO2,DIBUJO3,DIBUJO4}
 opcionesmenu;
 
-void onMenu(int opcion)
-{
+void onMenu(int opcion){
     // dependiendo del menu seleccionadop se configuran las
     // variables iFondo e iDibujo con un color pre-determinado
     switch(opcion){
@@ -27,8 +28,7 @@ void onMenu(int opcion)
     glutPostRedisplay();
 }
 
-void creacionMenu(void)
-{
+void creacionMenu(void){
     int menuFondo, menuDibujo, menuPrincipal;
 
     // glutAddMenuEntry genera una opcion para seleccionar
@@ -52,8 +52,7 @@ void creacionMenu(void)
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
-void display(void)
-{
+void display(void){
     float colores[6][3] = {
         {0.00f, 0.00f, 0.00f}, // 0 - negro
         {0.06f, 0.25f, 0.13f}, // 1 - verde osucro
@@ -77,8 +76,7 @@ void display(void)
     glutSwapBuffers();
 }
 
-int main (int argc, char** argv)
-{
+int main (int argc, char** argv){
     glutInit (&argc, argv);                         // Inicializa GLUT.
     glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // Establece el modo de visualización.  
     glutInitWindowSize (400, 400);                  // Establece el ancho y la altura de la ventana de visualización.

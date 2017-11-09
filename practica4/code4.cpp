@@ -8,6 +8,8 @@ al hacer click se obtiene el color se un pixel.
 #include <stdlib.h>
 #include <math.h>
 #include <GL/glut.h>
+#include <iostream>
+using namespace std;
 
 // ******* Seccion de variables globales ****************
 // dimensiones de la pantalla
@@ -173,8 +175,10 @@ void timer_function(int value){
 int main (int argc, char** argv){
     // funcion para iniciar la libreria glut y pasar los parametros de la consola
     glutInit (&argc, argv);
+
     // Usa double-buffer y modo de color RGBA
     glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA);
+
     // especifica el tamaño inicial de la ventana de la aplicacion
     glutInitWindowSize (800, 600);
 
