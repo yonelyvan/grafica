@@ -4,13 +4,14 @@
 #include <stdio.h>
 #include <math.h>
 
-
-
+//dimensiones de ventana
 int windowWidtb; 
 int windowHeight;
+
 //variables control de punto
 int xi, xf, xt;
 int yi, yf, yt;
+
 //configuracion inical del programa
 void init (void){
 	glClearColor (1.0f, 1.0f, 1.0f, 1.0f);
@@ -32,6 +33,8 @@ void display(void){
 	for (i =yi ; i <yf ; ++i)
 		glVertex2i(xi,i), glVertex2i(xf,i);
 	glEnd();
+
+	//activa el pintado de pixeles
 
 }
 
