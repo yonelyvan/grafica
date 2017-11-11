@@ -73,7 +73,7 @@ void creacionMenu(void){
 
 /******************** DIBUJOS RECTA CIRCULO ELIPSE CUADRADO **********************/
 void set_pixel(int xi, int yi){
-  	glBegin(GL_POINTS);
+  	glBegin(GL_pointS);
   	glColor3f(0,0,0);
 	glVertex2i(xi, yi);
   	glEnd();
@@ -241,7 +241,7 @@ void display(void){
     glClear(GL_COLOR_BUFFER_BIT);
     //pinta rectangulo gris con el  arrastre
     glColor3ub(192,192,192);
-    glBegin(GL_POINTS);
+    glBegin(GL_pointS);
     for (i=xi ; i<=xf ; i++)
         glVertex2i(i,yi), glVertex2i(i,yf);
     for (i=yi ; i<=yf ; i++)
@@ -265,7 +265,7 @@ void display(void){
     main_plot(xi,yi,xf,yf, ifigura);
     /*******************************************************/
     // activa el pintado de pixeles
-    glBegin(GL_POINTS);
+    glBegin(GL_pointS);
 
     // pinta posicion del mouse cada 2 segundos con pixeles
     glColor3ub(228, 0, 0);
