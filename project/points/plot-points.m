@@ -4,8 +4,8 @@ yy=data(:,2);
 zz=data(:,3);
 
 
-size = 8;
-color=[0 128 0];
+size = 2;
+color=[1 0 0];
 %set(gcf,'Color',[0,0,0]) 
 scatter3(xx, yy, zz, size,color)
 %mesh(xx,yy,zz)
