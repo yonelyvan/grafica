@@ -19,14 +19,14 @@ typedef vector< point > v_points;
 v_points VP;
 
 void test(){
-	int threshold=2500;
-    Mat img = imread("img.jpg");
+	int threshold=1000;
+    Mat img = imread("imgs/nikon3.jpg");
     imshow("img", img);//imagen original
-    //para mejoras aplicar filtros como como blur gaus ... para eliminar ruido
+    //para mejoras aplicar filtros como blur gaus ... para eliminar ruido
     //1)imagen a griz
 	Mat img_gray;
     cvtColor( img, img_gray, CV_BGR2GRAY );
-    imshow("gris", img_gray);
+    //imshow("gris", img_gray);
     //2) extraer contornos
     Mat contornos;
     Canny(img_gray, contornos, threshold, threshold*2, 5, true);
