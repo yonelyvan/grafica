@@ -1,61 +1,53 @@
 //g++ file.cpp -o m -lGL -lGLU -lglut
 #include <GL/glut.h>  
 #include <iostream>
+#include <vector>
+#include <queue>
+#include <map>
+#define x first
+#define y second
 using namespace std;
 
+typedef vector< vector< int > > M_patron;
+typedef vector< vector< int > > vv_matriz;
+typedef pair<int,int> point;
+
+struct Color {
+	GLfloat r;
+	GLfloat g;
+	GLfloat b;
+};
+
+bool operator ==( Color oldColor, Color color){
+	return ( color.r==oldColor.r && color.g==oldColor.g && color.b==oldColor.b )?true: false;
+}
+
+bool operator !=( Color oldColor, Color color){
+	return (oldColor==color)?false: true;
+}
+
+
 void init(){
-  glClearColor(0,0,0,0.0); //establece el color de fondo de la ventana
+  glClearColor(1,1,1,0.0); //establece el color de fondo de la ventana
   glMatrixMode(GL_PROJECTION); //establece el modo de matriz actual.
-  gluOrtho2D(0.0,600.0,0.0,600.0);//establece una región de visualización
+  gluOrtho2D(0.0,300.0,0.0,300.0);//establece una región de visualización
 }
 
-GLubyte fly[] = {
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x03, 0x80, 0x01, 0xC0, 0x06, 0xC0, 0x03, 0x60,
-	0x04, 0x60, 0x06, 0x20, 0x04, 0x30, 0x0C, 0x20,
-	0x04, 0x18, 0x18, 0x20, 0x04, 0x0C, 0x30, 0x20,
-	0x04, 0x06, 0x60, 0x20, 0x44, 0x03, 0xC0, 0x22,
-	0x44, 0x01, 0x80, 0x22, 0x44, 0x01, 0x80, 0x22,
-	0x44, 0x01, 0x80, 0x22, 0x44, 0x01, 0x80, 0x22,
-	0x44, 0x01, 0x80, 0x22, 0x44, 0x01, 0x80, 0x22,
-	0x66, 0x01, 0x80, 0x66, 0x33, 0x01, 0x80, 0xCC,
-	0x19, 0x81, 0x81, 0x98, 0x0C, 0xC1, 0x83, 0x30,
-	0x07, 0xe1, 0x87, 0xe0, 0x03, 0x3f, 0xfc, 0xc0,
-	0x03, 0x31, 0x8c, 0xc0, 0x03, 0x33, 0xcc, 0xc0,
-	0x06, 0x64, 0x26, 0x60, 0x0c, 0xcc, 0x33, 0x30,
-	0x18, 0xcc, 0x33, 0x18, 0x10, 0xc4, 0x23, 0x08,
-	0x10, 0x63, 0xC6, 0x08, 0x10, 0x30, 0x0c, 0x08,
-	0x10, 0x18, 0x18, 0x08, 0x10, 0x00, 0x00, 0x08};
-
-//8x16
-GLubyte simple_pattern[] = {
-	0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
-	0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
-	0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
-	0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
-	0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
-	0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
-	0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
-	0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
-	0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
-	0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
-	0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
-	0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-
-
-void set_pixel(int xi, int yi){
-  	glBegin(GL_POINTS);
-  	glColor3f(1,1,1);
-	glVertex2i(xi, yi);
-  	glEnd();
-  	glFlush();
+Color getPixelColor(int x, int y) {
+	Color color;
+	glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT, &color);
+	return color;
 }
-// [i/8,i%8]
 
+void setPixelColor(int x, int y, Color color) {
+	glColor3f(color.r, color.g, color.b);
+	glBegin(GL_POINTS);
+		glVertex2i(x, y);
+	glEnd();
+	glFlush();
+}
+
+//patron
 int mascara[8][8]={
 	{1,1,1,1,1,1,1,1},
 	{1,0,0,0,1,0,0,1},
@@ -65,43 +57,68 @@ int mascara[8][8]={
 	{1,1,0,1,0,1,0,1},
 	{1,0,0,0,1,0,0,1},
 	{1,1,1,1,1,1,1,1},
-};
+	};
+
+//se obtiene el patron donde r indica que tan grande sera el patron 
+M_patron get_patron(int r){
+	if(r < 1){r=1;}
+	M_patron P;
+	for (int i = 0; i < 8; ++i){
+		vector<int> Pi;
+		for (int j = 0; j < 8; ++j){
+			for (int k = 0; k < r; ++k){
+				Pi.push_back(mascara[i][j]);
+			}
+		}
+		for (int h = 0; h < r; ++h){
+			P.push_back(Pi);
+		}
+	}
+	return P;
+}
+
+//pintado de patron
+void floodFill4_y(int x, int y, Color oldColor, Color newColor) {
+	Color color;
+	point point_i(x,y);
+	queue<point> queue_points;
+	queue_points.push(point_i);
+
+	M_patron MMP= get_patron(4);
+	int dim = MMP.size();
+	map<int, map<int,bool> > visitados;
+	while(!queue_points.empty()){
+		point_i = queue_points.front();
+		queue_points.pop();
+		color = getPixelColor(point_i.x, point_i.y);
+		if(color == oldColor && visitados[point_i.x][point_i.y]!=1){
+			visitados[point_i.x][point_i.y]=1;
+			if( MMP[point_i.x%dim][point_i.y%dim]==1 ){
+				setPixelColor( point_i.x, point_i.y, newColor);
+			}
+			if(visitados[point_i.x+1][point_i.y]!=1){
+				queue_points.push(point(point_i.x+1, point_i.y));
+			}
+			if(visitados[point_i.x][point_i.y+1]!=1){
+				queue_points.push(point(point_i.x, point_i.y+1));
+			}
+			if(visitados[point_i.x][point_i.y-1]!=1){
+				queue_points.push(point(point_i.x, point_i.y-1));
+			}
+			if(visitados[point_i.x-1][point_i.y]!=1){
+				queue_points.push(point(point_i.x-1, point_i.y));
+			}
+		}
+	}
+}
 
 
 void poligono(){
 	glClear(GL_COLOR_BUFFER_BIT); 
-
+	glColor3f(0.0, 0.0, 0.0);
 	int x0=10, y0=10;
-	int zoom=5;
+	int zoom=6;
 
-	glBegin(GL_LINES);
-		glVertex2i(x0+0*zoom,y0+0*zoom);
-		glVertex2i(x0+0*zoom,y0+28*zoom);
-		glVertex2i(x0+0*zoom,y0+28*zoom);
-		glVertex2i(x0+28*zoom,y0+28*zoom);
-		glVertex2i(x0+28*zoom,y0+28*zoom);
-		glVertex2i(x0+28*zoom,y0+0*zoom);
-		glVertex2i(x0+28*zoom,y0+0*zoom);
-		glVertex2i(x0+0*zoom,y0+0*zoom);
-	glEnd();
-
-	
-	int xn=0 ,yn=0;
-	for (int i = x0; i < 28*zoom; ++i){
-		for (int j = y0; j < 28*zoom; ++j){
-			if(mascara[i%8][j%8]){
-				cout<<i%8<<j%8<<endl;
-				set_pixel(xn+ x0+i%8,yn+ y0+j%8);
-			}
-			yn=((j-y0)/8)*8;
-		}
-		xn=((i-x0)/8)*8;
-	}
-
-
-	
-
-/*
 	glBegin(GL_LINES);
 		glVertex2i(x0+0*zoom,y0+0*zoom);
 		glVertex2i(x0+0*zoom,y0+21*zoom);
@@ -112,35 +129,12 @@ void poligono(){
 		glVertex2i(x0+7*zoom,y0+0*zoom);
 		glVertex2i(x0+0*zoom,y0+0*zoom);
 	glEnd();
-*/
 
-
+	Color oldColor = {1.0, 1.0, 1.0};//blanco 	old
+	Color newColor = {0.0, 1.0, 0.0};//verde 	new
+	floodFill4_y(x0+10,y0+10,oldColor,newColor);
 	glFlush(); 
 }
-
-
-void patrones(){
-	glClear(GL_COLOR_BUFFER_BIT); 
-	int x0=10, y0=150;
-	int zoom=20;
-	
-	glEnable(GL_POLYGON_STIPPLE);	
-		glColor3f( 0.0f, 1.0f, 0.0f );//verde       
-		glPolygonStipple (fly);
-		glBegin(GL_POLYGON);
-			glVertex2i(x0+0*zoom,y0+0*zoom);
-			glVertex2i(x0+0*zoom,y0+21*zoom);
-			glVertex2i(x0+28*zoom,y0+21*zoom);
-			glVertex2i(x0+7*zoom,y0+0*zoom);
-		glEnd();
-		
-		glPolygonStipple( simple_pattern );
-		glColor3f( 0.0f, 0.0f, 1.0f );       
-	glDisable(GL_POLYGON_STIPPLE);
-  	
-  	glFlush(); 
-}
-
 
 
 
@@ -148,13 +142,10 @@ int main(int argc, char** argv) {
     glutInit(&argc, argv); //se inicializa GLUT
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);//establece el modo de visualización inicial
     glutInitWindowPosition(50,100);//estableze posición de la ventana inicial
-    glutInitWindowSize(600,600);//estableze tamaño de la ventana inicial
-    glutCreateWindow("Ejemplo OpenGL");//label de la ventana
-
+    glutInitWindowSize(300,300);//estableze tamaño de la ventana inicial
+    glutCreateWindow("OpenGL");//label de la ventana
     init();
-    //glutDisplayFunc(patrones); //visualizacion de una funion
     glutDisplayFunc(poligono); //visualizacion de una funion
-    
     glutMainLoop(); //entra al ciclo de procesamiento de eventos GLUT
     exit(0);
 }
