@@ -20,7 +20,7 @@ v_points VP;
 
 void test(){
 	int threshold=1000;
-    Mat img = imread("imgs/nikon3.jpg");
+    Mat img = imread("imgs/sd_spline-0.jpg");
     imshow("img", img);//imagen original
     //para mejoras aplicar filtros como blur gaus ... para eliminar ruido
     //1)imagen a griz
@@ -71,3 +71,13 @@ int main(int argc, char** argv){
 //float r = 102.0 ;
 //float an = ((VP[i].X*360)/480)*PI/180;
 //myfile <<r*cos(an) <<" "<<VP[i].Y<<" "<< r*sin(an) <<'\n';
+
+
+/*
+https://askubuntu.com/questions/856460/use-a-digital-camera-canon-as-webcam
+gphoto2 --stdout --capture-movie | ffmpeg -i - -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video1
+
+*/
+
+
+
