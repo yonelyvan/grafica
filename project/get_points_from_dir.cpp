@@ -1,4 +1,15 @@
 //  g++ file.cpp -o m `pkg-config --cflags --libs opencv`
+
+/*
+obtiene los puntos de ua carpeta de fotos 
+
+ejecucion:
+- compilar y copiar ejecutable en la carpeta de las fotos
+- crear carpeta "points"
+- ejecutar:
+        find -name "*.jpg" -exec ./m  {} \;
+---los punots se guardan en la carpeta "points"
+*/
 #include "opencv2/opencv.hpp"
 
 #include <iostream>
@@ -81,7 +92,6 @@ int main(int argc, char** argv){
 
 /*
 https://askubuntu.com/questions/856460/use-a-digital-camera-canon-as-webcam
-gphoto2 --stdout --capture-movie | ffmpeg -i - -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video1
 
 */
 
