@@ -18,10 +18,10 @@ typedef vector< point > v_points;
 
 v_points VP;
 
-void test(){
-	int threshold=1000;
-    Mat img = imread("imgs/sd_spline-0.jpg");
-    imshow("img", img);//imagen original
+void test(string file_name){
+	int threshold=240;
+    Mat img = imread(file_name);
+    //imshow("img", img);//imagen original
     //para mejoras aplicar filtros como blur gaus ... para eliminar ruido
     //1)imagen a griz
 	Mat img_gray;
@@ -30,8 +30,9 @@ void test(){
     //2) extraer contornos
     Mat contornos;
     Canny(img_gray, contornos, threshold, threshold*2, 5, true);
-    imshow("contornos", contornos);
-    //2) obtener puntos de los contornos
+    //imshow("contornos", contornos);
+    
+    //3) obtener puntos de los contornos
     vector<vector<Point> > p_contornos;
     //findContours( contours, found_contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
     findContours(contornos, p_contornos, RETR_LIST,CV_CHAIN_APPROX_NONE); //CV_CHAIN_APPROX_SIMPLE);
@@ -44,15 +45,15 @@ void test(){
     		VP.push_back( point(xx,yy) );//y:filas x:columnas
     	}
     }
-    if( waitKey(1e6) == 27){ cout<<"OK"<<endl; }
+    if( waitKey(1e2) == 27){ cout<<"OK"<<endl; }
 }
 
 // escribir puntos blancos en fichero
-void print_poits(){
+void print_poits(string name_only){
 	int num_points=VP.size();
 	show(num_points);
 	ofstream myfile;
-	myfile.open("points/points.txt");
+	myfile.open("points/"+name_only+".txt");
 	for (int i = 0; i < VP.size(); ++i){
 		myfile <<VP[i].X <<" "<<480-VP[i].Y<<" "<< 0 <<'\n';
 	}
@@ -62,8 +63,13 @@ void print_poits(){
 
 
 int main(int argc, char** argv){
-    test();
-    print_poits();
+    string n_file;
+    n_file = argv[1];//campana-0.jpg
+    int l = n_file.size();
+    string name_only = n_file.substr(0,l-4);
+    show(n_file);
+    test(n_file);
+    print_poits(name_only);
 	return 0;
 }
 
