@@ -1,13 +1,13 @@
 // g++ file.cpp -o m -lGL -lGLU -lglut
 #include <GL/glut.h>
 
-
 class wcPt2D {
 	public:
 		GLfloat x, y;
 };
 
 void init (){
+    glClearColor(1.0, 1.0, 1.0, 0.0);
 	glMatrixMode (GL_PROJECTION);
 	gluOrtho2D (-100.0, 100.0, -100.0, 100.0);
 	glMatrixMode (GL_MODELVIEW);
