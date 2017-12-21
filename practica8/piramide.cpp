@@ -2,15 +2,15 @@
 #include <GL/glut.h>
 
 
-float ver[6][3] ={
-	//{ -1.0,-1.0,1.0 },
-	//{ -1.0,1.0,1.0 },
+float ver[8][3] ={
+	{ -1.0,-1.0,1.0 },
+	{ -1.0,1.0,1.0 },
 	{ 1.0,1.0,1.0 },
 	{ 1.0,-1.0,1.0 },
-	{ -1.0,-1.0,-1.0 },
+	{ 0.0,0.0,-1.0 },
 	{ -1.0,1.0,-1.0 },
-	{ 1.0,1.0,-1.0 },
-	{ 1.0,-1.0,-1.0 },
+	{ 0.0,0.0,-1.0 },
+	{ 0.0,0.0,-1.0 },
 }; 
 
 GLfloat color[8][3] ={
@@ -25,7 +25,7 @@ GLfloat color[8][3] ={
 };
 
 void quad(int a, int b, int c, int d){
-	glBegin(GL_QUADS);
+	glBegin(GL_POLYGON);
 	glColor3fv(color[a]);
 	glVertex3fv(ver[a]);
 
@@ -39,14 +39,26 @@ void quad(int a, int b, int c, int d){
 	glVertex3fv(ver[d]);
 	glEnd();
 } 
+void tri(int a, int b, int c){
+	glBegin(GL_TRIANGLES);
+	glColor3fv(color[a]);
+	glVertex3fv(ver[a]);
 
-void colorcube(){
+	glColor3fv(color[b]);
+	glVertex3fv(ver[b]);
+
+	glColor3fv(color[c]);
+	glVertex3fv(ver[c]);
+
+	glEnd();
+} 
+
+void piramide(){
 	quad(0, 3, 2, 1);
-	quad(2, 3, 7, 6);
-	quad(0, 4, 7, 3);
-	quad(1, 2, 6, 5);
-	quad(4, 5, 6, 7);
-	quad(0, 1, 5, 4);
+	tri(0,3,4);
+	tri(3,2,6);
+	tri(2,1,7);
+	tri(1,0,6);
 } 
 
 double rotate_y = 0;
@@ -65,7 +77,7 @@ void specialKeys(int key, int x, int y){
 }
 
 void display(){
-	glClearColor(0, 0, 0, 1);
+	glClearColor(1, 1, 1, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_PROJECTION);
@@ -84,7 +96,7 @@ void display(){
 
 	glRotatef(rotate_x, 1.0, 0.0, 0.0);
 	glRotatef(rotate_y, 0.0, 1.0, 0.0);
-	colorcube();
+	piramide();
 
 	glutSwapBuffers();
 }

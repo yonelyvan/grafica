@@ -1,5 +1,6 @@
 //g++ file.cpp -o m -lGL -lGLU -lglut
 #include <GL/glut.h>  
+#include <math.h>
  
 void init(){
   glClearColor(0,0,0,0.0); //establece el color de fondo de la ventana

@@ -1,6 +1,9 @@
 // g++ file.cpp -o m -lGL -lGLU -lglut
 #include <GL/glut.h>
-
+#include <iostream>
+#include <math.h>
+#define PI 3.1415
+using namespace std;
 
 float ver[8][3] ={
 	{ -1.0,-1.0,1.0 },
@@ -40,13 +43,52 @@ void quad(int a, int b, int c, int d){
 	glEnd();
 } 
 
+
+void cilindro (int r){
+	GLfloat x,y,z;
+	//referencia el origen de coordenadas
+	glBegin(GL_QUAD_STRIP);
+	glColor3fv(color[3]);
+	for (int i = 0; i < 361; ++i){
+		x = r*cos(i*PI/180); 
+		y = r*sin(i*PI/180); 	
+		z = 1.0;
+		GLfloat p[3]={x,y,z};
+		GLfloat p2[3]={x,y,-z};
+		glVertex3fv(p);
+		glVertex3fv(p2);
+
+	}
+	glEnd();
+	//tap superior
+	glColor3fv(color[4]);
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < 361; ++i){
+		x = r*cos(i*PI/180); 
+		y = r*sin(i*PI/180); 	
+		z = 1.0;
+		GLfloat p[3]={x,y,z};
+		glVertex3fv(p);
+	}
+	glEnd();
+	//tapa inferior
+	glColor3fv(color[5]);
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < 361; ++i){
+		x = r*cos(i*PI/180); 
+		y = r*sin(i*PI/180); 	
+		z = -1.0;
+		GLfloat p[3]={x,y,z};
+		glVertex3fv(p);
+	}
+	glEnd();
+}
+
+
+
+
 void colorcube(){
-	quad(0, 3, 2, 1);
-	quad(2, 3, 7, 6);
-	quad(0, 4, 7, 3);
-	quad(1, 2, 6, 5);
-	quad(4, 5, 6, 7);
-	quad(0, 1, 5, 4);
+	cilindro(1);
 } 
 
 double rotate_y = 0;
@@ -65,7 +107,7 @@ void specialKeys(int key, int x, int y){
 }
 
 void display(){
-	glClearColor(0, 0, 0, 1);
+	glClearColor(1, 1, 1, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_PROJECTION);
