@@ -1,19 +1,17 @@
 // g++ file.cpp -o m -lGL -lGLU -lglut
 #include <GL/glut.h>
 #include <math.h>
+#include <iostream>
 #define TAM_VENTANA_X 600 
 #define TAM_VENTANA_Y 600
+using namespace std;
+#define show(x) cout<<#x<<" "<<x<<endl;
 
 float angulo =0.0; //angulo inicial
 float posicion[2]={TAM_VENTANA_X/2.0,TAM_VENTANA_Y/2.0}; //pos inicial
 
  
-void init(){
-	glClearColor(1,1,1,1.0);
-	glClear(GL_COLOR_BUFFER_BIT); //establece el modo de matriz actual.
-	gluOrtho2D(0.0,600.0,0.0,600.0);//establece una región de visualización
-	//glFlush();
-}
+
 
 void turnTo(float angle){
 	angulo = angle;
@@ -82,6 +80,31 @@ void polyespiral(){
 
 
 
+
+
+//extremos de la ventana de recorte
+float xmin,ymin,xmax,ymax;
+void configuraventana(){
+	xmin = TAM_VENTANA_X / 3.0;
+	ymin = TAM_VENTANA_Y / 3.0;
+	xmax = 2*TAM_VENTANA_X / 3.0;
+	ymax = 2*TAM_VENTANA_Y / 3.0;
+	show(xmin);
+	show(xmax);
+	show(ymin);
+	show(ymax);
+	//xmin = 0.0;
+	//ymin = 0.0;
+	//xmax = 600.0;
+	//ymax = 600.0;
+}
+
+void init(){
+	glClearColor(1,1,1,1.0);
+	glClear(GL_COLOR_BUFFER_BIT); //establece el modo de matriz actual.
+	gluOrtho2D(xmin,xmax,ymin,ymax);//establece una región de visualización
+}
+
 int main(int argc, char** argv) {
 	glutInit(&argc, argv); 
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
@@ -89,6 +112,7 @@ int main(int argc, char** argv) {
 	glutInitWindowSize(600,600);
 	glutCreateWindow("OpenGL");
 
+	configuraventana();
 	init();
 	//glutDisplayFunc(motivo); 
 	glutDisplayFunc(polyespiral); 
